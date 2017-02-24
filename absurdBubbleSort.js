@@ -7,13 +7,13 @@ const reader = readline.createInterface({
 
 // Write this first.
 function askIfGreaterThan(el1, el2, callback) {
-  reader.question(`Is ${el1} greater than ${el2} (yes/no)`, (answer) => {
+  reader.question(`Is ${el1} greater than ${el2} (yes/no)?`, (answer) => {
     if (answer.match(/y*/)[0]) {
       callback(true);
     } else {
       callback(false);
     }
-    reader.close();
+
   });
   // Prompt user to tell us whether el1 > el2; pass true back to the
   // callback if true; else false.
@@ -27,30 +27,32 @@ function innerBubbleSortLoop(arr, i, madeAnySwaps, outerBubbleSortLoop) {
 
   if (i === arr.length - 1){
     outerBubbleSortLoop(madeAnySwaps);
-    console.log(arr, "final sorted array");
   } else {
-    // i++;
+    // 2. Else, use `askIfGreaterThan` to compare `arr[i]` and `arr[i +
+    //    1]`. Swap if necessary. Call `innerBubbleSortLoop` again to
+    //    continue the inner loop. You'll want to increment i for the
+    //    next call, and possibly switch madeAnySwaps if you did swap.
+
     madeAnySwaps = false;
 
     let el1 = arr[i];
     let el2 = arr[i+1];
 
-    if (el1 > el2){
-      let el1Value = el1;
-      arr[i] = arr[i+1];
-      arr[i+1] = el1Value;
-      console.log(arr, "array after switch");
+    askIfGreaterThan(el1, el2, (answer) => {
+      if (answer) {
+        let el1Value = el1;
+        arr[i] = arr[i+1];
+        arr[i+1] = el1Value;
+        console.log(arr, "array after switch");
 
-      madeAnySwaps = true;
-    }
-    i++;
-    innerBubbleSortLoop(arr, i, madeAnySwaps, outerBubbleSortLoop);
+        madeAnySwaps = true;
+      }
+
+      i++;
+      innerBubbleSortLoop(arr, i, madeAnySwaps, outerBubbleSortLoop);
+    });
   }
 
-  // 2. Else, use `askIfGreaterThan` to compare `arr[i]` and `arr[i +
-  //    1]`. Swap if necessary. Call `innerBubbleSortLoop` again to
-  //    continue the inner loop. You'll want to increment i for the
-  //    next call, and possibly switch madeAnySwaps if you did swap.
 }
 
 // Once you're done testing innerBubbleSortLoop, write outerBubbleSortLoop.
@@ -75,12 +77,3 @@ absurdBubbleSort([3, 2, 1], function (arr) {
   console.log("Sorted array: " + JSON.stringify(arr));
   reader.close();
 });
-
-// askIfGreaterThan(1,2, () => console.log("Callback was called"));
-
-// let sortedArray = [1, 2, 3];
-// let unsortedArray = [3, 2, 1];
-// innerBubbleSortLoop(unsortedArray, 0, false, () => {
-//   console.log("Finished!");
-// });
-// console.log(sortedArray);
